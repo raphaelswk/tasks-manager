@@ -5,7 +5,7 @@ namespace Business.Interfaces;
 
 public interface ITaskItemService
 {
-    Task<IEnumerable<TaskItem>> GetAllTasks(
+    Task<(IEnumerable<TaskItem> Items, int TotalCount)> GetAllTasks(
         int pageNumber,
         int pageSize,
         Priority? priority = null,

@@ -22,11 +22,24 @@ public class TaskItemsController : ControllerBase
 
     // GET /tasks?page=1&pageSize=20
     [HttpGet]
-    public async Task<IActionResult> GetTasks([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
+    public async Task<IActionResult> GetTasks(
+        [FromQuery] int pageNumber = 1, 
+        [FromQuery] int pageSize = 10,
+        [FromQuery] Priority? priority = null,
+        [FromQuery] Status? status = null)
     {
-        var tasks = await _taskService.GetAllTasks(page, pageSize);
-        var taskDtos = _mapper.Map<IEnumerable<TaskItemDto>>(tasks);
-        return Ok(taskDtos);
+        var result = await _taskService.GetAllTasks(pageNumber, pageSize, priority, status);
+        var taskDtos = _mapper.Map<IEnumerable<TaskItemDto>>(result.Items);
+        
+        return Ok(new {
+            Items = taskDtos,
+            TotalCount = result.TotalCount,
+            PageNumber = pageNumber,
+            PageSize = pageSize,
+            TotalPages = (int)Math.Ceiling(result.TotalCount / (double)pageSize),
+            HasNextPage = (pageNumber * pageSize) < result.TotalCount,
+            HasPreviousPage = pageNumber > 1
+        });
     }
 
     // GET /tasks/5

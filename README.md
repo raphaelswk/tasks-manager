@@ -1,4 +1,4 @@
-# Cytidel Developer Challenge - Task Management Backend
+# Cytidel Developer Challenge - Tasks Manager
 
 ## Backend Architecture
 This repository contains the backend solution for the Cytidel Developer Challenge. It is a .NET 8 Web API designed to manage tasks, built following the principles of Clean Architecture to ensure a clear separation of concerns, maintainability, and testability.

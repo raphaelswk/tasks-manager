@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Api;
 using Business.Implementations;
 using Business.Interfaces;
@@ -21,7 +22,12 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddControllers();
+// builder.Services.AddControllers();
+// Configure controllers and add JSON options to serialize enums as strings
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

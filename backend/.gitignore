@@ -54,4 +54,5 @@ TestResult.xml
 nunit-*.xml
 
 .tool-versions
-*.db
+*.db*
+*.log

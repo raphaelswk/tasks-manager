@@ -26,13 +26,13 @@ public class TaskItemService(ITaskItemRepository taskItemRepository, IPublisher 
         return taskItemRepository.Delete(id);
     }
 
-    public Task<IEnumerable<TaskItem>> GetAllTasks(
+    public async Task<(IEnumerable<TaskItem> Items, int TotalCount)> GetAllTasks(
         int pageNumber,
         int pageSize,
         Priority? priority = null,
         Status? status = null)
     {
-        return taskItemRepository.GetAll(pageNumber, pageSize, priority, status);
+        return await taskItemRepository.GetAll(pageNumber, pageSize, priority, status);
     }
 
     public Task<TaskItem?> GetTaskById(int id)

@@ -25,7 +25,7 @@ public class TaskItemRepository(AppDbContext context) : ITaskItemRepository
         return true;
     }
 
-    public async Task<IEnumerable<TaskItem>> GetAll(int pageNumber, int pageSize, Priority? priority, Status? status)
+    public async Task<(IEnumerable<TaskItem> Items, int TotalCount)> GetAll(int pageNumber, int pageSize, Priority? priority, Status? status)
     {
         var query = context.TaskItems.AsQueryable();
 
@@ -39,10 +39,15 @@ public class TaskItemRepository(AppDbContext context) : ITaskItemRepository
             query = query.Where(t => t.Status == status.Value);
         }
 
-        return await query.OrderByDescending(t => t.Id)
-                          .Skip((pageNumber - 1) * pageSize)
-                          .Take(pageSize)
-                          .ToListAsync();
+        var totalCount = await query.CountAsync();
+
+        var items = await query
+            .OrderByDescending(t => t.Id)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (items, totalCount);
     }
 
     public async Task<TaskItem?> GetById(int id)
