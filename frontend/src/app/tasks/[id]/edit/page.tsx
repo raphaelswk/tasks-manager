@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { getTask, updateTask, deleteTask } from "@/lib/api";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -36,36 +36,45 @@ const taskSchema = z.object({
 
 type TaskFormValues = z.infer<typeof taskSchema>;
 
-export default function EditTaskPage({ params }: { params: { id: string } }) {
+export default function EditTaskPage({ params }: { params: Promise<{ id: string }> }) {
     const router = useRouter();
-    const taskId = parseInt(params.id, 10);
+    const resolvedParams = use(params);
+    const taskId = parseInt(resolvedParams.id, 10);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [initialData, setInitialData] = useState<TaskFormValues | null>(null);
     
     const form = useForm<TaskFormValues>({
         resolver: zodResolver(taskSchema),
+        values: initialData || undefined // Set initial values when data is available
     });
 
     useEffect(() => {
         if (isNaN(taskId)) {
-            // Handle invalid ID
             router.push('/');
             return;
         }
         const fetchTask = async () => {
             try {
                 const task = await getTask(taskId);
-                form.reset({
-                    ...task,
+                const formattedTask = {
+                    title: task.title,
+                    description: task.description,
+                    // Ensure consistent case by converting to lowercase
+                    priority: task.priority.toLowerCase() as "low" | "medium" | "high",
+                    status: task.status.toLowerCase() as "pending" | "inprogress" | "completed" | "archived",
                     dueDate: new Date(task.dueDate),
-                });
+                };
+                setInitialData(formattedTask);
+                form.reset(formattedTask);
+                setIsLoading(false);
             } catch (error) {
                 console.error("Failed to fetch task", error);
-                // Optionally redirect to a not-found page
                 router.push('/');
             }
         };
         fetchTask();
-    }, [taskId, form, router]);
+    }, [taskId, router]);
 
     const onSubmit = async (data: TaskFormValues) => {
         await updateTask(taskId, { ...data, dueDate: data.dueDate.toISOString() });
@@ -78,6 +87,50 @@ export default function EditTaskPage({ params }: { params: { id: string } }) {
         router.push("/");
         router.refresh();
     };
+
+    if (isLoading) {
+        return <div className="container mx-auto p-4 text-center">Loading...</div>;
+    }
+
+    // Modify the Select components to include defaultValue
+    const PrioritySelect = ({ field }: { field: any }) => (
+        <Select 
+            onValueChange={field.onChange}
+            defaultValue={field.value}
+            value={field.value}
+        >
+            <FormControl>
+                <SelectTrigger>
+                    <SelectValue />
+                </SelectTrigger>
+            </FormControl>
+            <SelectContent>
+                <SelectItem value="low">Low</SelectItem>
+                <SelectItem value="medium">Medium</SelectItem>
+                <SelectItem value="high">High</SelectItem>
+            </SelectContent>
+        </Select>
+    );
+
+    const StatusSelect = ({ field }: { field: any }) => (
+        <Select 
+            onValueChange={field.onChange}
+            defaultValue={field.value}
+            value={field.value}
+        >
+            <FormControl>
+                <SelectTrigger>
+                    <SelectValue />
+                </SelectTrigger>
+            </FormControl>
+            <SelectContent>
+                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="inprogress">In Progress</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
+                <SelectItem value="archived">Archived</SelectItem>
+            </SelectContent>
+        </Select>
+    );
 
     return (
         <div className="container mx-auto p-4 sm:p-6 md:p-8 flex justify-center">
@@ -119,14 +172,7 @@ export default function EditTaskPage({ params }: { params: { id: string } }) {
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>Priority</FormLabel>
-                                            <Select onValueChange={field.onChange} value={field.value}>
-                                                <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
-                                                <SelectContent>
-                                                    <SelectItem value="low">Low</SelectItem>
-                                                    <SelectItem value="medium">Medium</SelectItem>
-                                                    <SelectItem value="high">High</SelectItem>
-                                                </SelectContent>
-                                            </Select>
+                                            <PrioritySelect field={field} />
                                             <FormMessage />
                                         </FormItem>
                                     )}
@@ -138,15 +184,7 @@ export default function EditTaskPage({ params }: { params: { id: string } }) {
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>Status</FormLabel>
-                                            <Select onValueChange={field.onChange} value={field.value}>
-                                                <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
-                                                <SelectContent>
-                                                    <SelectItem value="pending">Pending</SelectItem>
-                                                    <SelectItem value="inprogress">In Progress</SelectItem>
-                                                    <SelectItem value="completed">Completed</SelectItem>
-                                                    <SelectItem value="archived">Archived</SelectItem>
-                                                </SelectContent>
-                                            </Select>
+                                            <StatusSelect field={field} />
                                             <FormMessage />
                                         </FormItem>
                                     )}

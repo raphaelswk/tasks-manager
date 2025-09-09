@@ -1,9 +1,7 @@
 /**
  * Create Task Page
  * * This page provides a form for creating a new task. It uses react-hook-form
- * for state management and zod for validation.
- * * Advanced Feature:
- * - Displays a confirmation modal if the user sets the priority to "high".
+ * for state management and zod for validation. 
  */
 "use client";
 
