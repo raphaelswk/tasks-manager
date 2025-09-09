@@ -30,7 +30,7 @@ const taskSchema = z.object({
     title: z.string().min(1, "Title is required"),
     description: z.string().optional(),
     priority: z.enum(["low", "medium", "high"]),
-    status: z.enum(["pending", "in progress", "completed", "archived"]),
+    status: z.enum(["pending", "inprogress", "completed", "archived"]),
     dueDate: z.date().refine((date) => date instanceof Date && !isNaN(date.getTime()), {
         message: "A due date is required.",
     }),
@@ -130,7 +130,7 @@ export default function CreateTaskPage() {
                                                 <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
                                                 <SelectContent>
                                                     <SelectItem value="pending">Pending</SelectItem>
-                                                    <SelectItem value="in progress">In Progress</SelectItem>
+                                                    <SelectItem value="inprogress">In Progress</SelectItem>
                                                     <SelectItem value="completed">Completed</SelectItem>
                                                     <SelectItem value="archived">Archived</SelectItem>
                                                 </SelectContent>

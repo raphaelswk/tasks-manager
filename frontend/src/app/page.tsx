@@ -200,7 +200,7 @@ export default function TaskListPage() {
                                         <SelectContent>
                                             <SelectItem value="all">All Statuses</SelectItem>
                                             <SelectItem value="pending">Pending</SelectItem>
-                                            <SelectItem value="in progress">In Progress</SelectItem>
+                                            <SelectItem value="inprogress">In Progress</SelectItem>
                                             <SelectItem value="completed">Completed</SelectItem>
                                             <SelectItem value="archived">Archived</SelectItem>
                                         </SelectContent>

@@ -29,6 +29,9 @@ public class CreateTaskItemDto
 
     [Required]
     public DateTime DueDate { get; set; }
+
+    [Required]
+    public Status Status { get; set; }
 }
 
 // DTO for updating an existing task

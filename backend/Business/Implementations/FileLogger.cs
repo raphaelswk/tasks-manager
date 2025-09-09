@@ -9,8 +9,8 @@ namespace Business.Implementations;
 /// </summary>
 public class FileLogger : IFileLogger
 {
-    private readonly string _logFilePath = "api_requests.log";
-    private readonly string _criticalLogFilePath = "critical_updates.log";
+    private readonly string _logFilePath = "../api_requests.log";
+    private readonly string _criticalLogFilePath = "../critical_updates.log";
     private static readonly object _lock = new();
 
     public void Log(string message)
