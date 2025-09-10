@@ -1,9 +1,8 @@
 # Cytidel Developer Challenge - Tasks Manager
+This repository contains the solution for the Cytidel Developer Challenge. It is a full-stack task management application built with a .NET 8 backend and a Next.js frontend, designed with clean architecture principles and a focus on modern development practices.
 
-## Backend Architecture
-This repository contains the backend solution for the Cytidel Developer Challenge. It is a .NET 8 Web API designed to manage tasks, built following the principles of Clean Architecture to ensure a clear separation of concerns, maintainability, and testability.
-
-The solution is structured into distinct layers, each with a specific responsibility:
+## Backend (C# / .NET 8)
+The backend is built using a Clean Architecture approach to ensure a clear separation of concerns, making the application more maintainable and testable.
 
 - **Domain:** Contains the core business entities and enums (TaskItem, Priority, Status). This layer has no external dependencies.
 - **Business:** Holds all the business logic. It defines interfaces for data access (ITaskRepository) and contains the application services (TaskService). It is completely decoupled from the persistence mechanism.
@@ -79,10 +78,57 @@ dotnet run
 
 Once the application is running, open your browser and navigate to the Swagger UI to view and test the API endpoints. The URL will be in your terminal output (e.g., https://localhost:7123/swagger).
 
+## Frontend (Next.js 15 / React)
+The frontend is a modern, server-aware application built with Next.js and the App Router.
+
+### Technologies Used
+- **Framework:** Next.js 15 / React 19
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS with shadcn/ui components
+- **Forms:** React Hook Form with Zod for schema validation
+- **Charts:** amCharts 5
+- **Testing:** Jest with React Testing Library
+
+### How to Set Up and Run the Project
+
+Prerequisites
+- [Node.js v18+](https://nodejs.org/en/download)
+
+Step-by-Step Instructions
+
+1. Clone the Repository
+```bash
+git clone https://github.com/raphaelswk/tasks-manager.git
+cd tasks-manager/frontend
+```
+
+2. Make sure the backend is running
+
+3. Create Environment File
+
+Create a new file named .env.local in the root of the frontend folder and add the URL of your running backend.
+
+```bash
+NEXT_PUBLIC_API_URL=https://localhost:7123
+```
+
+4. Install Dependencies
+```bash
+npm install
+```
+
+5. Run the Frontend Development Server
+```bash
+npm run dev
+```
+
+Open http://localhost:3000 with your browser to see the result.
+
+
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-Made with ♥ &nbsp;by Raphael Socolowski 👋 &nbsp;[Check my linkedin out](https://www.linkedin.com/in/raphaelswk/)
+Made with ♥ &nbsp;by Raphael Socolowski 👋 &nbsp;[See my LinkedIn](https://www.linkedin.com/in/raphaelswk/)
